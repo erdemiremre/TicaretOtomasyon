@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MvcOnlineTicariOtomasyon.Models.Helper;
 using MvcOnlineTicariOtomasyon.Models.Siniflar;
 
 namespace MvcOnlineTicariOtomasyon.Controllers
@@ -11,10 +13,16 @@ namespace MvcOnlineTicariOtomasyon.Controllers
     {
         // GET: Personel
         Context c = new Context();
-        public ActionResult Index()
+        public ActionResult Index(string p)
         {
-            var degerler = c.Personels.ToList();
-            return View(degerler);
+            var personeller = from x in c.Personels select x;
+            if (!string.IsNullOrEmpty(p))
+            {
+                personeller = personeller.Where(y => y.PersonelAd.Contains(p));
+            }
+            return View(personeller.ToList());
+            //var degerler = c.Personels.ToList();
+            //return View(degerler);
         }
         [HttpGet]
         public ActionResult PersonelEkle()
@@ -31,6 +39,14 @@ namespace MvcOnlineTicariOtomasyon.Controllers
         [HttpPost]
         public ActionResult PersonelEkle(Personel p)
         {
+            if (Request.Files.Count>0)
+            {
+                string dosyaadi = Path.GetFileName(Request.Files[0].FileName);
+                string uzanti = Path.GetExtension(Request.Files[0].FileName);
+                string yol = "~/Image/" + dosyaadi + uzanti;
+                Request.Files[0].SaveAs(Server.MapPath(yol));
+                p.PersonelGorsel = "/Image/" + dosyaadi + uzanti;
+            }
             c.Personels.Add(p);
             c.SaveChanges();
             return RedirectToAction("Index");
@@ -49,6 +65,14 @@ namespace MvcOnlineTicariOtomasyon.Controllers
         }
         public ActionResult PersonelGuncelle(Personel p)
         {
+            if (Request.Files.Count > 0)
+            {
+                string dosyaadi = Path.GetFileName(Request.Files[0].FileName);
+                string uzanti = Path.GetExtension(Request.Files[0].FileName);
+                string yol = "~/Image/" + dosyaadi + uzanti;
+                Request.Files[0].SaveAs(Server.MapPath(yol));
+                p.PersonelGorsel = "/Image/" + dosyaadi + uzanti;
+            }
             var prsn = c.Personels.Find(p.Personelid);
             prsn.PersonelAd = p.PersonelAd;
             prsn.PersonelSoyad = p.PersonelSoyad;
@@ -56,6 +80,59 @@ namespace MvcOnlineTicariOtomasyon.Controllers
             prsn.Departmanid = p.Departmanid;
             c.SaveChanges();
             return RedirectToAction("Index");
+        }
+        public ActionResult PersonelListe()
+        {
+            var sorgu = c.Personels.ToList();
+            return View(sorgu);
+        }
+
+        [HttpPost]
+        public JsonResult PersonelEkleJson()
+        {
+            List<SelectListItem> deger1 = (from x in c.Departmans.ToList()
+                                           select new SelectListItem
+                                           {
+                                               Text = x.DepartmanAd,
+                                               Value = x.Departmanid.ToString()
+                                           }).ToList();
+            return Json(deger1);
+
+
+        }
+        [HttpPost]
+        public JsonResult PersonelEklemeYapJson(Personel person)
+        {
+            var hasPerson = c.Personels.Where(x => x.PersonelAd == person.PersonelAd && x.PersonelSoyad == person.PersonelSoyad).FirstOrDefault();
+            var department = c.Departmans.Where(x => x.Departmanid == person.Departmanid).FirstOrDefault();
+            
+            if (hasPerson!=null)
+            {
+                return Json(new ResultStatusUI()
+                {
+                     FeedBack="Bu personelin kayıtı mevcut.",
+                     Object=null,
+                     Result=false,
+                });
+            }
+            if (Request.Files.Count > 0)
+            {
+                string dosyaadi = Path.GetFileName(Request.Files[0].FileName);
+                string uzanti = Path.GetExtension(Request.Files[0].FileName);
+                string yol = "~/Image/" + dosyaadi + uzanti;
+                Request.Files[0].SaveAs(Server.MapPath(yol));
+                person.PersonelGorsel = "/Image/" + dosyaadi + uzanti;
+            }
+            c.Personels.Add(person);
+            c.SaveChanges();
+            person.Departman = department;
+            return Json(new ResultStatusUI() 
+            { 
+
+                 FeedBack="Yeni Personel Eklendi",
+                 Object=person,
+                 Result=true,
+            });
         }
     }
 }

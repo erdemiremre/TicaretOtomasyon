@@ -3,6 +3,8 @@
     ViewBag.Title = "YeniUrun";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
 <br />
 <h2>Yeni Ürün Sayfası</h2>
 <br />
@@ -32,6 +34,17 @@
     @Html.LabelFor(x => x.Durum)
     @Html.TextBoxFor(x => x.Durum, new { @class = "form-control" })
     <br />
-    <button class="btn btn-info">Ekle</button>
+    <button class="btn btn-info" id="Btn1">Ekle</button>
+    <script>
+        $('#Btn1').click(function (){
+            swal({
+                title: "Başarılı!",
+                text: "Yeni Ürün Eklendi!",
+                icon: "success",
+                button: "Tamam !",
+            });
+        });
+
+    </script>
 </form>
 

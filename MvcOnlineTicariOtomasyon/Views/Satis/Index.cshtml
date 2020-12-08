@@ -8,7 +8,7 @@
 <table id="tbl1" class="table table-bordered">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>#</th>
             <th>Ürün</th>
             <th>Marka</th>
             <th>Cari</th>
@@ -21,10 +21,11 @@
             <th>Detaylar</th>
         </tr>
     </thead>
+    @{ int sayi= 0;}
     @foreach (var x in Model)
     {
         <tr>
-            <td>@x.Satisid</td>
+            <td>@{sayi++;}@sayi</td>
             <td>@x.Urun.UrunAd</td>
             <td>@x.Urun.Marka</td>
             <td>@x.Cariler.CariAd @x.Cariler.CariSoyad</td>

@@ -14,6 +14,11 @@
     <title>Mvc5 ile Online Ticari Otomasyon</title>
     <link href="~/web/dist/css/styles.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="~/web/dist/js/scripts.js"></script>
+    <link href="~/Content/Loading/css/jquery.loadingModal.min.css" rel="stylesheet" />
+    <script src="~/Content/Loading/js/jquery.loadingModal.min.js"></script>
 </head>
 <body>
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -99,8 +104,12 @@
                             </nav>
                         </div>
                         <div class="sb-sidenav-menu-heading">Rapor & fatura</div>
+                        <a class="nav-link" href="/Personel/PersonelListe/">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            Personel Listesi
+                        </a>
                         <a class="nav-link" href="/Satis/Index/">
-                            <div class="sb-nav-link-icon"><i class="fas fa-taxi"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-cash-register"></i></div>
                             Satışlar
                         </a>
                         <a class="nav-link" href="/Fatura/Index/">
@@ -108,20 +117,28 @@
                             Faturalar
                         </a>
                         <a class="nav-link" href="index.html">
-                            <div class="sb-nav-link-icon"><i class="fas  fa-space-shuttle"></i></div>
-                            Fatura Kalemleri
-                        </a>
-                        <a class="nav-link" href="index.html">
                             <div class="sb-nav-link-icon"><i class="fas  fa-bug"></i></div>
                             Giderler
+                        </a>
+                        <a class="nav-link" href="/Kargo/Index/">
+                            <div class="sb-nav-link-icon"><i class="fas fa-truck-moving"></i></div>
+                            Kargolar
                         </a>
                         <a class="nav-link" href="/Urun/UrunListesi">
                             <div class="sb-nav-link-icon"><i class="fas     fa-print"></i></div>
                             Pdf ~ Excel
                         </a>
+                        <a class="nav-link" href="/Alertler/Index/">
+                            <div class="sb-nav-link-icon"><i class="fas     fa-allergies"></i></div>
+                            Alertler
+                        </a>
                         <a class="nav-link" href="/istatistik/Index/">
                             <div class="sb-nav-link-icon"><i class="fas  fa-database"></i></div>
                             İstatistikler
+                        </a>
+                        <a class="nav-link" href="/istatistik/KolayTablolar/">
+                            <div class="sb-nav-link-icon"><i class="fas  fa-signal"></i></div>
+                            Hızlı Bakış
                         </a>
                         <a class="nav-link" href="/Galeri/Index/">
                             <div class="sb-nav-link-icon"><i class="fas  fa-camera-retro"></i></div>
@@ -131,6 +148,8 @@
                             <div class="sb-nav-link-icon"><i class="fas  fa-university"></i></div>
                             Ürün Detay
                         </a>
+
+
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -160,9 +179,29 @@
             </footer>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="~/web/dist/js/scripts.js"></script>
+    @*<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>*@
+   
+
+    <!-- JavaScript -->
+    <script src="~/Content/alertify/alertify.js"></script>
+
+    <!-- CSS -->
+    <link href="~/Content/alertify/css/alertify.min.css" rel="stylesheet" />
+    <!-- Default theme -->
+    <link href="~/Content/alertify/css/themes/default.min.css" rel="stylesheet" />
+    <!-- Semantic UI theme -->
+    <link href="~/Content/alertify/css/themes/semantic.min.css" rel="stylesheet" />
+    <!-- Bootstrap theme -->
+    <link href="~/Content/alertify/css/themes/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- RTL version -->
+    <link href="~/Content/alertify/css/alertify.rtl.min.css" rel="stylesheet" />
+    <!-- Default theme -->
+    <link href="~/Content/alertify/css/themes/default.rtl.min.css" rel="stylesheet" />
+    <!-- Semantic UI theme -->
+    <link href="~/Content/alertify/css/themes/semantic.rtl.min.css" rel="stylesheet" />
+    <!-- Bootstrap theme -->
+    <link href="~/Content/alertify/css/themes/bootstrap.rtl.min.css" rel="stylesheet" />
 </body>
 </html>
 

@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MvcOnlineTicariOtomasyon.Models.Helper;
 using MvcOnlineTicariOtomasyon.Models.Siniflar;
+using PagedList;
+using PagedList.Mvc;
 
 namespace MvcOnlineTicariOtomasyon.Controllers
 {
@@ -11,9 +14,9 @@ namespace MvcOnlineTicariOtomasyon.Controllers
     {
         // GET: Kategori
         Context c = new Context();
-        public ActionResult Index()
+        public ActionResult Index(int sayfa = 1)
         {
-            var degerler = c.Kategoris.ToList();
+            var degerler = c.Kategoris.ToList().ToPagedList(sayfa, 4);
             return View(degerler);
         }
         [HttpGet]
@@ -46,6 +49,30 @@ namespace MvcOnlineTicariOtomasyon.Controllers
             ktgr.KategoriAd = k.KategoriAd;
             c.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public JsonResult KategoriEkleJson(Kategori kategori)
+        {
+            var hasCategory = c.Kategoris.Where(x => x.KategoriAd == kategori.KategoriAd).FirstOrDefault();
+            if (hasCategory != null)
+            {
+                return Json(new ResultStatusUI()
+                {
+                    FeedBack = "Aynı kategori mevcut.",
+                    Object = null,
+                    Result = false,
+                });
+            }
+
+            c.Kategoris.Add(kategori);
+            c.SaveChanges();
+            return Json(new ResultStatusUI()
+            {
+                FeedBack = "Kategori eklendi.",
+                Object = kategori,
+                Result = true,
+            });
         }
     }
 }

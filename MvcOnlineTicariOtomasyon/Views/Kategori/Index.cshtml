@@ -1,13 +1,15 @@
 ﻿@using MvcOnlineTicariOtomasyon.Models.Siniflar
-@model List<Kategori>
+@using PagedList
+@using PagedList.Mvc
+@model PagedList.IPagedList<Kategori>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
-<table class="table table-bordered" style="margin-top:20px">
+<table class="table table-bordered" id="tableIndex" style="margin-top:20px">
     <tr>
-        <th>ID</th>
+        <th>#</th>
         <th>Kategori Adı</th>
         <th>Sil</th>
         <th>Güncelle</th>
@@ -24,9 +26,72 @@
             </td>
             <td><a href="/Kategori/KategoriSil/@k.KategoriID" class="btn btn-danger">Sil</a></td>
             <td><a href="/Kategori/KategoriGetir/@k.KategoriID" class="btn btn-success">Güncelle</a></td>
+
         </tr>
     }
 
 </table>
-<a href="/Kategori/KategoriEkle" class="btn btn-primary">Kategori Ekle</a>
 
+<div class="modal" id="NewProduct">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Kategori Ekleme</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="KategoriAd">Kategori Adı</label>
+                    <input class="form-control" data-val="true" data-val-length="KategoriAd alanı uzunluğu en fazla 30 olan bir dize olmalıdır." data-val-length-max="30" id="KategoriAd" name="KategoriAd" type="text" value="">
+                </div>
+                <button type="button" class="btn btn-danger" onclick="AddProduct()">Ekle</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#NewProduct">Yeni Ürün</button>
+
+@Html.PagedListPager((IPagedList)Model, sayfa => Url.Action("Index", new { sayfa }))
+@*<a href="/Kategori/KategoriEkle" class="btn btn-primary">Kategori Ekle</a>*@
+
+<script>
+    function AddProduct() {
+        var categoryName = $('#KategoriAd').val();
+        if (categoryName == "") {
+            alertify.danger("Kategori adı girilmedi.");
+        }
+        else {
+            $.ajax({
+                url: "/Kategori/KategoriEkleJson",
+                type: "POST",
+                dataType: "json",
+                data: { KategoriAd: categoryName },
+                beforeSend: function () {
+                    $('body').loadingModal({ text: "Kategori ekleniyor..", animation: 'cubeGrid', backgroundColor: 'black' });
+                },
+                success: function (data) {
+                    if (data.Result == false) {
+                        alertify.error(data.FeedBack);
+                    }
+                    else {
+                        if ($('tr').length < 5) {
+                            var newRowContent = '<tr><td>' + data.Object.KategoriID + '</td>';
+                            newRowContent += '<td data-id="' + data.Object.KategoriID + '" > ' + data.Object.KategoriAd + '</td > ';
+                            newRowContent += '<td><a href="/Kategori/KategoriSil/' + data.Object.KategoriID + '" class="btn btn-danger">Sil</a></td>';
+                            newRowContent += '<td><a href="/Kategori/KategoriGetir/' + data.Object.KategoriID + '" class="btn btn-success">Güncelle</a></td></tr>';
+                            $("#tableIndex tbody").append(newRowContent);
+                        }
+
+                        $('[data-dismiss="modal"]').click();
+                        alertify.success(data.FeedBack);
+                        $('#KategoriAd').val("");
+                    }
+                    $('body').loadingModal('destroy');
+                    
+                }
+            });
+        }
+    }
+</script>

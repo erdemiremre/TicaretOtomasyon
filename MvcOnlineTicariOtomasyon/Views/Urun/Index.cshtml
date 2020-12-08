@@ -4,40 +4,127 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+@*<script src="~/Scripts/jquery-3.4.1.js"></script>*@
+
+
+@*<script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>*@
+
+
+<br />
+<form autocomplete="off">
+    @using (Html.BeginForm("Index", "Urun", FormMethod.Get))
+    {
+        <p>
+            Ürün Adı: @Html.TextBox("p")
+            <input type="submit" value="Ara" />
+        </p>
+    }
+</form>
 <br />
 <table class="table table-bordered">
     <tr>
-        <th>ID</th>
-        <th>ÜRÜN</th>
-        <th>MARKA</th>
-        <th>STOK</th>
-        <th>ALIŞ FİYAT</th>
-        <th>SATIŞ FİYAT</th>
-        <th>KATEGORİ</th>
-        <th>GÖRSEL</th>
-        <th>SİL</th>
-        <th>GÜNCELLE</th>
+        <th>#</th>
+        <th>Ürün</th>
+        <th>Marka</th>
+        <th>Stok</th>
+        <th>Alış Fiyat</th>
+        <th>Satış Fiyat</th>
+        <th>Kategori</th>
+        <th>Görsel</th>
+        <th>İşlem Yap</th>
+        @*<th>Güncelle</th>*@
     </tr>
-    @foreach(var u in Model)
+    @{ int sayi = 0;}
+    @foreach (var urun in Model)
     {
-<tr>
-    <td>@u.Urunid</td>
-    <td>@u.UrunAd</td>
-    <td>@u.Marka</td>
-    <td>@u.Stok</td>
-    <td>@u.AlisFiyat</td>
-    <td>@u.SatisFiyat</td>
-    <td>@u.Kategori.KategoriAd</td>
-    <td>@u.UrunGorsel</td>
-    <td>
-        <a href="/Urun/UrunSil/@u.Urunid" class="btn btn-danger">Sil</a>
-    </td>
-    <td>
-        <a href="/Urun/UrunGetir/@u.Urunid" class="btn btn-success">Güncelle</a>
-    </td>
-</tr>
+        <tr data-id="@(urun.Urunid)">
+            <td>@{sayi++;} @sayi</td>
+            <td>@urun.UrunAd</td>
+            <td>@urun.Marka</td>
+            <td>@urun.Stok</td>
+            <td>@urun.AlisFiyat ₺</td>
+            <td>@urun.SatisFiyat ₺</td>
+            <td>@urun.Kategori.KategoriAd</td>
+            <td>
+                <img src=" @urun.UrunGorsel" style="width:50px;height:50px;" />
+            </td>
+            <td>
+                <a style="font-size:22px; margin-left:16px; margin-top:10px;" href="/Urun/UrunGetir/@urun.Urunid" data-toggle="tooltip" data-placement="top" title="Güncelle"><i class="fa fa-edit"></i></a>
+                @*<a style="font-size:22px; margin-left:10px; margin-top:16px; color:#ec1b1b;" href="/Urun/UrunSil/@urun.Urunid" data-toggle="tooltip" data-placement="top" title="Sil"><i  class="fa fa-trash"></i></a>*@
+                <a style="font-size:22px; margin-left:10px; margin-top:16px; color:#ec1b1b;" onclick="DeleteProduct(@(urun.Urunid))" data-toggle="tooltip" data-placement="top" title="Sil"><i class="fa fa-trash"></i></a>
+                <a style="font-size:22px; margin-left:10px; margin-top:16px; color:#039b39;" href="/Urun/SatisYap/@urun.Urunid" data-toggle="tooltip" data-placement="top" title="Satış Yap"><i class="fa fa-cart-plus"></i></a>
+            </td>
+            @*<td>
+                    <a href="/Urun/UrunGetir/@u.Urunid" class="btn btn-success">Güncelle</a>
+                </td>*@
+        </tr>
     }
 
 </table>
+
 <a href="/Urun/YeniUrun/" class="btn btn-info">Yeni Ürün</a>
+
+
+<script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    function DeleteProduct(id) {
+        swal({
+            title: "Silmek istiyor musun?",
+            text: "Ürün, ürünler listesinden kaldırılacaktır!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "/Urun/UrunSilJson",
+                        type: "POST",
+                        dataType: "json",
+                        data: { id: id },
+                        success: function (data) {
+                            if (data.status == true) {
+                                $("[data-id='" + id + "']").remove();
+                                alertify.success(data.message);
+                            }
+                            else {
+                                alert(data.message);
+                            }
+                        }
+                    });
+                } else {
+                    swal("Silme işlemi iptal edildi..!");
+                }
+            });
+
+
+    }
+
+</script>
+
+@*<script>
+        $('#btnsil').click(function () {
+            swal({
+                title: "Silmek istiyor musun?",
+                text: "Ürün, ürünler listesinden kaldırılacaktır!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        swal("Ürün başarılı şekilde silindi!", {
+                            icon: "success",
+                        });
+                    } else {
+                        swal("Your imaginary file is safe!");
+                    }
+                });
+        });
+
+    </script>*@
 

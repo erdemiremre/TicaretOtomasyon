@@ -12,20 +12,19 @@
 </ol>
 <table class="table table-hover">
     <tr>
-        <th>Personel ID</th>
-        <th>Ad</th>
-        <th>Soyad</th>
-        <th>Görsel</th>
+        <th>#</th>
+        <th>Personel</th>
+        @*<th>Görsel</th>*@
         <th>Satışlar</th>
     </tr>
+    @{ int sayi = 0;}
     @foreach(var x in Model)
     {
 
     <tr>
-        <td>@x.Personelid</td>
-        <td>@x.PersonelAd</td>
-        <td>@x.PersonelSoyad</td>
-        <td>@x.PersonelGorsel</td>
+        <td>@{sayi++;} @sayi</td>
+        <td>@x.PersonelAd @x.PersonelSoyad</td>
+        @*<td>@x.PersonelGorsel</td>*@
         <td><a href="/Departman/DepartmanPersonelSatis/@x.Personelid"class=" btn btn-warning">Satışlar</a></td>
     </tr>
     }

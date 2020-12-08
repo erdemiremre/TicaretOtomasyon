@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
-<table class="table table-bordered" style="margin-top:20px">
+<table class="table table-bordered" id="tableIndex" style="margin-top:20px">
     <tr>
         <th>ID</th>
         <th>Departman Adı</th>
@@ -30,5 +30,59 @@
     }
 
 </table>
+<div class="modal" id="NewDepartman">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Departman Ekleme</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="KategoriAd">Departman Adı</label>
+                    <input class="form-control" data-val="true" data-val-length="DepartmanAd alanı uzunluğu en fazla 30 olan bir dize olmalıdır." data-val-length-max="30" id="DepartmanAd" name="DepartmanAd" type="text" value="">
+                </div>
+                <button type="button" class="btn btn-success" onclick="AddDepartman()">Ekle</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#NewDepartman">Pp Departman Ekle</button>
 <a href="/Departman/DepartmanEkle" class="btn btn-info">Departman Ekle</a>
 
+<script>
+    function AddDepartman() {
+        var departmanName = $('#DepartmanAd').val();
+        if (departmanName == "") {
+            alertify.error("Departman adı girilmedi!!");
+        }
+        else {
+            $.ajax({
+                url: "/Departman/DepartmanEkleJson",
+                type: "POST",
+                dataType: "json",
+                data: { DepartmanAd: departmanName },
+                success: function (data) {
+                    if (data.Result == false) {
+                        alertify.error(data.FeedBack);
+                    }
+                    else {
+                        var newRowContent = '<tr><td>' + data.Object.Departmanid + '</td>';
+                        newRowContent += '<td data-id="' + data.Object.Departmanid + '" > ' + data.Object.DepartmanAd + '</td > ';
+                        newRowContent += '<td><a href="/Departman/DepartmanSil/' + data.Object.Departmanid + '" class="btn btn-danger">Sil</a></td>';
+                        newRowContent += '<td><a href="/Departman/DepartmanGetir/' + data.Object.Departmanid + '" class="btn btn-success">Güncelle</a></td>';
+                        newRowContent += '<td><a href="/Departman/DepartmanDetay/' + data.Object.Departmanid + '" class="btn btn-dark">Detay</a></td></tr>';
+                        $("#tableIndex tbody").append(newRowContent);
+                        debugger;
+                        $('[data-dismiss="modal"]').click();
+                        alertify.success(data.FeedBack);
+                        $('#DepartmanAd').val("");
+                        
+                    }
+                    
+                    $('body').loadingModal('destroy');
+                }
+            });
+        }
+    }
+</script>

@@ -5,7 +5,17 @@
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 <br />
-<table class="table table-striped">
+<form autocomplete="off">
+    @using (Html.BeginForm("Index", "Personel", FormMethod.Get))
+    {
+        <p>
+            Personel Adı: @Html.TextBox("p")
+            <input type="submit" value="Ara" />
+        </p>
+    }
+</form>
+<br />
+<table class="table table-striped" id="tableIndex">
     <tr>
         <th>Personel ID</th>
         <th>Ad</th>
@@ -22,7 +32,9 @@
             <td>@x.Personelid</td>
             <td>@x.PersonelAd</td>
             <td>@x.PersonelSoyad</td>
-            <td>@x.PersonelGorsel</td>
+            <td>
+                <img src=" @x.PersonelGorsel" style="width:50px;height:50px;" />
+            </td>
             <td>@x.Departman.DepartmanAd</td>
             @*<td><a href="/Cari/CariSil/@x.Personelid" class=" btn btn-danger">Sil</a></td>*@
             <td><a href="/Personel/PersonelGetir/@x.Personelid" class=" btn btn-success">Güncelle</a></td>
@@ -30,5 +42,96 @@
         </tr>
     }
 </table>
-<a href="/Personel/PersonelEkle" class="btn btn-info">Yeni Personel Ekle</a>
 
+<div class="modal" id="NewPerson">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Yeni Personel Ekleme</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="PersonelAd">PersonelAd</label>
+                    <input class="form-control" data-val="true" data-val-length="PersonelAd alanı uzunluğu en fazla 30 olan bir dize olmalıdır." data-val-length-max="30" id="PersonelAd" name="PersonelAd" type="text" value="">
+                    <br>
+                    <label for="PersonelSoyad">PersonelSoyad</label>
+                    <input class="form-control" data-val="true" data-val-length="PersonelSoyad alanı uzunluğu en fazla 30 olan bir dize olmalıdır." data-val-length-max="30" id="PersonelSoyad" name="PersonelSoyad" type="text" value="">
+                    <br>
+                    <label for="PersonelGorsel">PersonelGorsel</label>
+
+                    <br>
+                    <input type="file" name="PersonelGorsel">
+                    <br>
+                    <br>
+                    <label for="Departman">Departman</label>
+                    <select class="form-control" data-val="true" data-val-number="The field Departmanid must be a number." data-val-required="Departmanid alanı gereklidir." id="Departmanid" name="Departmanid">
+                    </select>
+                    <br>
+                </div>
+                <button class="btn btn-info" data-role="save">Kaydet</button>
+                <button class="btn btn-danger" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="/Personel/PersonelEkle" class="btn btn-info">Yeni Personel Ekle</a>
+<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#NewPerson">Yeni Personel</button>
+
+<script type="text/javascript">
+    $('#NewPerson').on('shown.bs.modal', function (e) {
+        $.ajax({
+            url: "/Personel/PersonelEkleJson",
+            type: 'POST',
+            dataType: 'json', // added data type
+            success: function (res) {
+                $('#Departmanid').html('');
+                var dropdownDepartman = '<option value="0">Lütfen Seçim yapınız</option>'
+                $.each(res, function (i, item) {
+                    dropdownDepartman += '<option value="' + item.Value + '">' + item.Text + '</option>';
+                })
+                $('#Departmanid').append(dropdownDepartman);
+                debugger;
+            }
+        });
+    })
+    $(document)
+        .on('click', '[data-role="save"]', function () {
+            //data-role=save kısmı istediğin şekilde yazarak çekebilirsin.
+            
+            var personName = $('#PersonelAd').val();
+            var personSurname = $('#PersonelSoyad').val();
+            var personFoto = 'test';
+            var personDepartman = $('#Departmanid').val();
+            debugger;
+            $.ajax({
+                url: "/Personel/PersonelEklemeYapJson",
+                type: 'POST',
+                dataType: 'json',
+                data: { PersonelAd: personName, PersonelSoyad: personSurname, PersonelGorsel: personFoto, Departmanid: personDepartman},
+                success: function (data) {
+                    if (data.Result == false) {
+                        debugger;
+                        alertify.error(data.FeedBack)
+                    }
+                    else {
+                        debugger;
+                        var newRowContent = '<tr><td>' + data.Object.Personelid + '</td>';
+                        newRowContent += '<td > ' + data.Object.PersonelAd +  '</td >';
+                        newRowContent += '<td> '  + data.Object.PersonelSoyad + '</td >';
+                        newRowContent += '<td> ' + data.Object.PersonelGorsel + '</td >';
+                        newRowContent += '<td> ' + data.Object.Departmanid + '</td >';
+                        newRowContent += '<td><a href="/Personel/PersonelGetir/' + data.Object.Personelid + '" class=" btn btn-success">Güncelle</a></td>';
+                        newRowContent += '<td><a href="/Departman/DepartmanPersonelSatis/' + data.Object.Personelid + '" class=" btn btn-dark">Detaylar</a></td></tr>';
+                        debugger;
+                        $("#tableIndex tbody").append(newRowContent);
+                        alertify.success(data.FeedBack);
+                    }
+                    $('[data-dismiss="modal"]').click();
+                    $('#PersonelAd').val("");
+                }
+            })
+        })
+
+
+</script>

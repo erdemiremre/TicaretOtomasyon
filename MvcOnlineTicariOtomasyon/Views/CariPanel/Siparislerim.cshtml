@@ -1,0 +1,29 @@
+﻿@using MvcOnlineTicariOtomasyon.Models.Siniflar
+@model List<SatisHareket>
+@{
+    ViewBag.Title = "Siparislerim";
+    Layout = "~/Views/Shared/_CariLayout.cshtml";
+}
+<br />
+<h2>Sipariş Geçmişim</h2>
+<br />
+<table class="table table-bordered">
+    <tr>
+        <th>#</th>
+        <th>Ürün Adı</th>
+        <th>Marka</th>
+        <th>Fiyat</th>
+        <th>Tarih</th>
+    </tr>
+    @{ var sayi = 0;}
+    @foreach (var x in Model)
+    {
+        <tr>
+            <td>@{sayi++;}@sayi</td>
+            <td>@x.Urun.UrunAd</td>
+            <td>@x.Urun.Marka</td>
+            <td>@x.Fiyat ₺</td>
+            <td>@x.Tarih</td>
+        </tr>
+    }
+</table>

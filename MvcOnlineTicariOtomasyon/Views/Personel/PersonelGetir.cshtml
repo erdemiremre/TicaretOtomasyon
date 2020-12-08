@@ -6,7 +6,7 @@
 
 <h2>PersonelGetir</h2>
 <br />
-@using (Html.BeginForm("PersonelGuncelle", "Personel", FormMethod.Post))
+@using (Html.BeginForm("PersonelGuncelle", "Personel", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
 <div class="form-group">
     @Html.HiddenFor(x => x.Personelid)
@@ -19,7 +19,10 @@
     @*@Html.ValidationMessageFor(x => x.CariSoyad, "", new { @style = "color:red" })*@
     <br />
     @Html.LabelFor(x => x.PersonelGorsel)
-    @Html.TextBoxFor(x => x.PersonelGorsel, new { @class = "form-control" })
+    @*@Html.TextBoxFor(x => x.PersonelGorsel, new { @class = "form-control" })*@
+    <br />
+    <input type="file" name="PersonelGorsel" />
+    <br />
     <br />
     @Html.LabelFor(x => x.Departman)
     @Html.DropDownListFor(x => x.Departmanid, (List<SelectListItem>)ViewBag.dgr2, new { @class = "form-control" })

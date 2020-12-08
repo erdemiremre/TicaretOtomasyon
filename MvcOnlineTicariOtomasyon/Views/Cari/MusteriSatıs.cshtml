@@ -12,8 +12,9 @@
 </ol>
 <table class="table table-condensed">
     <tr style="font-weight:bold">
-        <td>Satış ID</td>
+        <td>#</td>
         <td>Ürün</td>
+        <td>Marka</td>
         <td>Personel</td>
         <td>Fiyat</td>
         <td>Adet</td>
@@ -21,14 +22,16 @@
         <td>Tarih</td>
         <td>Yazdır</td>
     </tr>
+    @{ int sayi = 0;}
     @foreach (var x in Model)
     {
 
         <tr>
-            <td>@x.Satisid</td>
+            <td>@{sayi++;} @sayi</td>
             <td>@x.Urun.UrunAd</td>
+            <td>@x.Urun.Marka</td>
             <td>@x.Personel.PersonelAd @x.Personel.PersonelSoyad</td>
-            <td>@x.Fiyat</td>
+            <td>@x.Fiyat ₺</td>
             <td>@x.Adet</td>
             <td>@x.Toplam</td>
             <td>@x.Tarih</td>

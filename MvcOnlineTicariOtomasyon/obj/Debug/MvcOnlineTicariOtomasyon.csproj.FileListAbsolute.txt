@@ -81,3 +81,8 @@ C:\Users\EMREPC\source\repos\MvcOnlineTicariOtomasyon\MvcOnlineTicariOtomasyon\b
 C:\Users\EMREPC\source\repos\MvcOnlineTicariOtomasyon\MvcOnlineTicariOtomasyon\bin\EntityFramework.SqlServer.dll
 C:\Users\EMREPC\source\repos\MvcOnlineTicariOtomasyon\MvcOnlineTicariOtomasyon\bin\EntityFramework.xml
 C:\Users\EMREPC\source\repos\MvcOnlineTicariOtomasyon\MvcOnlineTicariOtomasyon\bin\EntityFramework.SqlServer.xml
+C:\Users\EMREPC\source\repos\MvcOnlineTicariOtomasyon\MvcOnlineTicariOtomasyon\bin\PagedList.dll
+C:\Users\EMREPC\source\repos\MvcOnlineTicariOtomasyon\MvcOnlineTicariOtomasyon\bin\PagedList.Mvc.dll
+C:\Users\EMREPC\source\repos\MvcOnlineTicariOtomasyon\MvcOnlineTicariOtomasyon\bin\PagedList.xml
+C:\Users\EMREPC\source\repos\MvcOnlineTicariOtomasyon\MvcOnlineTicariOtomasyon\bin\PagedList.Mvc.xml
+C:\Users\EMREPC\source\repos\MvcOnlineTicariOtomasyon\MvcOnlineTicariOtomasyon\bin\QRCoder.dll

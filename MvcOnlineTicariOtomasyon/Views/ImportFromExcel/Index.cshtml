@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h2>Excel İle Personel Ekleme</h2>
+<br />
+@using (Html.BeginForm("ImportExcelFileToDatabase", "ImportFromExcel", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <div class="table table-bordered">
+        <input type="file" id="FileUpload" name="FileUpload" required data-val="true"
+               data-val-required="please select a file" />
+
+        <input type="submit" id="Submit" class="submit" value="Upload" title="Click to upload file" />
+
+    </div>
+
+}

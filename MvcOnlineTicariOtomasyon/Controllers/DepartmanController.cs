@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MvcOnlineTicariOtomasyon.Models.Helper;
 using MvcOnlineTicariOtomasyon.Models.Siniflar;
 
 namespace MvcOnlineTicariOtomasyon.Controllers
@@ -60,6 +61,30 @@ namespace MvcOnlineTicariOtomasyon.Controllers
             var dpersatis = c.SatisHarekets.Where(x => x.Personelid == id).Select(y => y.Personel.PersonelAd+" "+y.Personel.PersonelSoyad).FirstOrDefault();
             ViewBag.dpers = dpersatis;
             return View(degerler);
+        }
+
+        [HttpPost]
+        public JsonResult DepartmanEkleJson(Departman departman)
+        {
+            var hasDepartman = c.Departmans.Where(x => x.DepartmanAd == departman.DepartmanAd).FirstOrDefault();
+            if (hasDepartman!=null)
+            {
+                return Json(new ResultStatusUI()
+                {
+                    FeedBack = "Aynı kategori mevcut.",
+                    Object = null,
+                    Result = false,
+                });
+            }
+            c.Departmans.Add(departman);
+            departman.Durum = true;
+            c.SaveChanges();
+            return Json(new ResultStatusUI() 
+            {
+                FeedBack="Departman eklendi.",
+                Object=departman,
+                Result=true,           
+            });
         }
     } 
 }

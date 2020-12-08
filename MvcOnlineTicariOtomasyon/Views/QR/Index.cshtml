@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+<br />
+<h2>QR Kodu Paneli</h2>
+<div>
+    
+    <input type="text" name="kod" autocomplete="off" />
+    <input type="submit" onclick="GetQrCodeImage()" value="QR Oluştur" />
+
+    <br />
+    <div id="qrCode"></div>
+     
+</div>
+
+<script type="text/javascript">
+    function GetQrCodeImage() {
+        var qrCode = $('[name="kod"]').val();
+        if (qrCode != "") {
+            $.ajax({
+                url: "/QR/QrCode",
+                type: "POST",
+                dataType: "json",
+                data: { kod: qrCode },
+                beforeSend: function () {
+                    $('body').loadingModal({ text: "QrCode oluşturuluyor..", animation: 'cubeGrid', backgroundColor: 'black' });
+                },
+                success: function (data) {
+                    $('#qrCode').html("");  //içini boşa eşitleme
+                    $('#qrCode').append('<img src="' + data + '" alt="" style="width:400px; height:400px;" />');
+                    $('body').loadingModal('destroy');
+                    alertify.success("QrCode başarıyla oluşturuldu.");
+                }
+            });
+        }
+        else {
+            alertify.error("Lütfen kod alanını doldurunuz..");
+        }
+
+    }
+</script>
+
