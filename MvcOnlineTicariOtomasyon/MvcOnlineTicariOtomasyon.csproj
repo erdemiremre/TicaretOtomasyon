@@ -165,6 +165,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\DTO\DepartmanDTO.cs" />
+    <Compile Include="Models\DTO\PersonelDTO.cs" />
     <Compile Include="Models\Helper\ResultStatusUI.cs" />
     <Compile Include="Models\Siniflar\Admin.cs" />
     <Compile Include="Models\Siniflar\Cariler.cs" />
@@ -181,9 +183,11 @@
     <Compile Include="Models\Siniflar\KargoDetay.cs" />
     <Compile Include="Models\Siniflar\KargoTakip.cs" />
     <Compile Include="Models\Siniflar\Kategori.cs" />
+    <Compile Include="Models\Siniflar\Mesajlar.cs" />
     <Compile Include="Models\Siniflar\Personel.cs" />
     <Compile Include="Models\Siniflar\SatisHareket.cs" />
     <Compile Include="Models\Siniflar\Sinif1.cs" />
+    <Compile Include="Models\Siniflar\Sinif2.cs" />
     <Compile Include="Models\Siniflar\Urun.cs" />
     <Compile Include="Models\Siniflar\Yapilacak.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2207,6 +2211,7 @@
     <Content Include="Content\DataTables\swf\flashExport.swf" />
     <Content Include="Content\Loading\css\jquery.loadingModal.min.css" />
     <Content Include="Content\Loading\js\jquery.loadingModal.min.js" />
+    <Content Include="Content\MyScripts\KategoriJs\js\KategoriIndex.js" />
     <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -2967,9 +2972,17 @@
     <Content Include="Views\Grafik\Index2.cshtml" />
     <Content Include="Views\Grafik\Index3.cshtml" />
     <Content Include="Views\Grafik\Index4.cshtml" />
+    <Content Include="Views\Grafik\Index5.cshtml" />
+    <Content Include="Views\Grafik\Index6.cshtml" />
+    <Content Include="Views\Grafik\Index7.cshtml" />
+    <Content Include="Views\Grafik\StokRaporu.cshtml" />
+    <Content Include="Views\Grafik\UrunRaporuHighCart.cshtml" />
+    <Content Include="Views\CariPanel\GelenMesajlar.cshtml" />
+    <Content Include="Views\CariPanel\GidenMesajlar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\MyScripts\KategoriJs\css\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

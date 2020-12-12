@@ -86,5 +86,33 @@ namespace MvcOnlineTicariOtomasyon.Controllers
                 Result=true,           
             });
         }
+
+        [HttpPost]
+        public JsonResult DepartmanGuncelleJson(Departman departman)
+        {
+            var name = c.Departmans.Where(x => x.DepartmanAd == departman.DepartmanAd).FirstOrDefault();
+            if (name != null)
+            {
+                if (name.Departmanid != departman.Departmanid)
+                {
+                    return Json(new ResultStatusUI()
+                    {
+                        FeedBack = "Böyle bir departman mevcut.",
+                        Object = departman,
+                        Result = false,
+                    });
+                }
+            }
+            var dp = c.Departmans.Find(departman.Departmanid);
+            dp.DepartmanAd = departman.DepartmanAd;
+            c.SaveChanges();
+
+            return Json(new ResultStatusUI()
+            {
+                FeedBack = "Departman güncellendi.",
+                Object = departman,
+                Result = true,
+            });
+        }
     } 
 }

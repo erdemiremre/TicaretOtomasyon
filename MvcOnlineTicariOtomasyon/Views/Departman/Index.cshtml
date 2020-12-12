@@ -11,22 +11,26 @@
         <th>Departman Adı</th>
         <th>Sil</th>
         <th>Güncelle</th>
+        <th>Güncelle Pp</th>
         <th>Detaylar</th>
     </tr>
     @foreach (var k in Model)
     {
 
-        <tr>
-            <td>
-                @k.Departmanid
-            </td>
-            <td>
-                @k.DepartmanAd
-            </td>
-            <td><a href="/Departman/DepartmanSil/@k.Departmanid" class="btn btn-danger">Sil</a></td>
-            <td><a href="/Departman/DepartmanGetir/@k.Departmanid" class="btn btn-success">Güncelle</a></td>
-            <td><a href="/Departman/DepartmanDetay/@k.Departmanid" class="btn btn-dark">Detay</a></td>
-        </tr>
+<tr>
+    <td >
+        @k.Departmanid
+    </td>
+    <td data-name="@k.Departmanid">
+        @k.DepartmanAd
+    </td>
+    <td><a href="/Departman/DepartmanSil/@k.Departmanid" class="btn btn-danger">Sil</a></td>
+    <td><a href="/Departman/DepartmanGetir/@k.Departmanid" class="btn btn-success">Güncelle</a></td>
+    <td>
+        <button type="button" class="btn btn-warning modalAc" data-adi="@k.DepartmanAd" data-id="@k.Departmanid" data-toggle="modal" data-target="#UpdateDepartman">Güncelle Pp</button>
+    </td>
+    <td><a href="/Departman/DepartmanDetay/@k.Departmanid" class="btn btn-dark">Detay</a></td>
+</tr>
     }
 
 </table>
@@ -49,6 +53,25 @@
 </div>
 <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#NewDepartman">Pp Departman Ekle</button>
 <a href="/Departman/DepartmanEkle" class="btn btn-info">Departman Ekle</a>
+
+
+<div class="modal" id="UpdateDepartman">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Departman Güncelleme</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="KategoriAd">Departman Adı</label>
+                    <input class="form-control" data-val="true" data-val-length="DepartmanAd alanı uzunluğu en fazla 30 olan bir dize olmalıdır." data-val-length-max="30" id="DepartmanAdUpdate" name="DepartmanAdUpdate" type="text" value="">
+                </div>
+                <button type="button" class="btn btn-success" id="updateButton" data-update="0">Güncelle</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     function AddDepartman() {
@@ -77,12 +100,46 @@
                         $('[data-dismiss="modal"]').click();
                         alertify.success(data.FeedBack);
                         $('#DepartmanAd').val("");
-                        
+
                     }
-                    
+
                     $('body').loadingModal('destroy');
                 }
             });
         }
     }
+
+    $('.modalAc').on('click', function (e) {
+        var departmanAdi = $(this).attr('data-adi');
+        var departmanId = $(this).attr('data-id');
+        $('#DepartmanAdUpdate').val(departmanAdi);
+        $('#updateButton').attr('data-update', departmanId);
+    })
+
+    $('#updateButton').on('click', function () {
+        var departmanId = $(this).attr('data-update');
+        var departmanAdi = $('#DepartmanAdUpdate').val();
+
+        $.ajax({
+            url: "/Departman/DepartmanGuncelleJson",
+            type: "POST",
+            dataType: "json",
+            data: { DepartmanAd: departmanAdi, Departmanid: departmanId  },
+            success: function (data) {
+                if (data.Result == false) {
+                    alertify.error(data.FeedBack);
+                }
+                else {
+                    debugger;
+                    $('[data-name="' + data.Object.Departmanid + '"]').html(data.Object.DepartmanAd);
+                    alertify.success(data.FeedBack);
+                    $('#DepartmanAdUpdate').val("");
+                    $('[data-id="' + data.Object.Departmanid + '"]').attr('data-adi', data.Object.DepartmanAd);
+                }
+                $('[data-dismiss="modal"]').click();
+                $('body').loadingModal('destroy');
+            }
+        });
+
+    })
 </script>

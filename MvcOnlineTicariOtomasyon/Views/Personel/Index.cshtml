@@ -91,7 +91,6 @@
                     dropdownDepartman += '<option value="' + item.Value + '">' + item.Text + '</option>';
                 })
                 $('#Departmanid').append(dropdownDepartman);
-                debugger;
             }
         });
     })
@@ -101,7 +100,7 @@
             
             var personName = $('#PersonelAd').val();
             var personSurname = $('#PersonelSoyad').val();
-            var personFoto = 'test';
+            var personFoto = $;
             var personDepartman = $('#Departmanid').val();
             debugger;
             $.ajax({
@@ -111,19 +110,16 @@
                 data: { PersonelAd: personName, PersonelSoyad: personSurname, PersonelGorsel: personFoto, Departmanid: personDepartman},
                 success: function (data) {
                     if (data.Result == false) {
-                        debugger;
                         alertify.error(data.FeedBack)
                     }
                     else {
-                        debugger;
                         var newRowContent = '<tr><td>' + data.Object.Personelid + '</td>';
                         newRowContent += '<td > ' + data.Object.PersonelAd +  '</td >';
                         newRowContent += '<td> '  + data.Object.PersonelSoyad + '</td >';
                         newRowContent += '<td> ' + data.Object.PersonelGorsel + '</td >';
-                        newRowContent += '<td> ' + data.Object.Departmanid + '</td >';
+                        newRowContent += '<td> ' + data.Object.DepartmanAdi + '</td >';
                         newRowContent += '<td><a href="/Personel/PersonelGetir/' + data.Object.Personelid + '" class=" btn btn-success">Güncelle</a></td>';
                         newRowContent += '<td><a href="/Departman/DepartmanPersonelSatis/' + data.Object.Personelid + '" class=" btn btn-dark">Detaylar</a></td></tr>';
-                        debugger;
                         $("#tableIndex tbody").append(newRowContent);
                         alertify.success(data.FeedBack);
                     }

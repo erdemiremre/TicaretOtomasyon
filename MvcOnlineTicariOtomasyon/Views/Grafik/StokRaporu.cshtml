@@ -1,0 +1,125 @@
+﻿
+@{
+    ViewBag.Title = "StokRaporu";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Document ready sayfa açıldığınd otomatik çalışır.
+        //Chartı açıldığında otomatik yüklenmesi için açtık
+        var chartData = [];
+        $.ajax({
+            url: "/Grafik/StokRaporDataGetir",
+            type: "POST",
+            dataType: "json",
+            beforeSend: function () {
+                $('body').loadingModal({ text: "Veriler Yükleniyor..", animation: 'cubeGrid', backgroundColor: 'black' });
+            },
+            success: function (data) {
+                $.each(data.Object, function (i, item) {
+                    chartData.push({
+                        name: item.Marka,
+                        y: item.Stk,
+                    })
+                })
+                $('body').loadingModal('destroy');
+                GetChart(chartData, 'container');
+            }
+        });
+
+    })
+
+
+
+    function GetChart(data, chartElement) {
+        Highcharts.chart(chartElement, {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Browser market shares in January, 2018'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.y} Adet </b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+            series: [{
+                name: 'Oran',
+                colorByPoint: true,
+                data: data,
+                //data: [{
+                //    name: 'Chrome',
+                //    y: 61.41,
+                //    sliced: true,
+                //    selected: true
+                //}, {
+                //    name: 'Internet Explorer',
+                //    y: 11.84
+                //}, {
+                //    name: 'Firefox',
+                //    y: 10.85
+                //}, {
+                //    name: 'Edge',
+                //    y: 4.67
+                //}, {
+                //    name: 'Safari',
+                //    y: 4.18
+                //}, {
+                //    name: 'Sogou Explorer',
+                //    y: 1.64
+                //}, {
+                //    name: 'Opera',
+                //    y: 1.6
+                //}, {
+                //    name: 'QQ',
+                //    y: 1.2
+                //}, {
+                //    name: 'Other',
+                //    y: 2.61
+                //}]
+            }]
+        });
+    }
+
+   
+</script>
+
+
+
+
+
+<figure class="highcharts-figure">
+    <div id="container"></div>
+    <p class="highcharts-description">
+        Chart showing browser market shares. Clicking on individual columns
+        brings up more detailed data. This chart makes use of the drilldown
+        feature in Highcharts to easily switch between datasets.
+    </p>
+
+</figure>
+

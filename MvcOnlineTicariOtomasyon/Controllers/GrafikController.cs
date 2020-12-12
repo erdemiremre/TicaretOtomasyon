@@ -1,4 +1,6 @@
-﻿using MvcOnlineTicariOtomasyon.Models.Siniflar;
+﻿using MvcOnlineTicariOtomasyon.Models.DTO;
+using MvcOnlineTicariOtomasyon.Models.Helper;
+using MvcOnlineTicariOtomasyon.Models.Siniflar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -69,6 +71,96 @@ namespace MvcOnlineTicariOtomasyon.Controllers
                 stok = 50
             });
             return snf;
+        }
+        public ActionResult Index5()
+        {
+            return View();
+        }
+        public ActionResult VisualizeUrunResult2()
+        {
+            return Json(UrunListesi2(), JsonRequestBehavior.AllowGet);
+        }
+        public List<Sinif2> UrunListesi2()
+        {
+            List<Sinif2> snf = new List<Sinif2>();
+            using (var c = new Context())
+            {
+                snf = c.Uruns.Select(x => new Sinif2
+                {
+                    urn = x.UrunAd,
+                    stk = x.Stok
+
+
+                }).ToList();
+            }
+            return snf;
+        }
+        public ActionResult Index6()
+        {
+            return View();
+        }
+        public ActionResult Index7()
+        {
+            return View();
+        }
+        public JsonResult VisualizeUrunResult3()
+        {
+            return Json(PersonelDptListe(), JsonRequestBehavior.AllowGet);
+        }
+        public List<DepartmanDTO> PersonelDptListe()
+        {
+            List<DepartmanDTO> snf = new List<DepartmanDTO>();
+            using (var c = new Context())
+            {
+                snf = c.Uruns.Select(x => new DepartmanDTO
+                {
+                    Marka=x.Marka,
+                    Stk=x.Stok
+                }).OrderByDescending(x=>x.Stk).ToList();
+            }
+            return snf;
+        }
+
+        public ActionResult StokRaporu()
+        {
+            return View();
+        }
+
+        public JsonResult StokRaporDataGetir()
+        {
+            List<DepartmanDTO> snf = new List<DepartmanDTO>();
+            using (var c = new Context())
+            {
+                snf = c.Uruns.Select(x => new DepartmanDTO
+                {
+                    Marka = x.Marka,
+                    Stk = x.Stok
+                }).OrderByDescending(x => x.Stk).ToList();
+            }
+            return Json(new ResultStatusUI()
+            {
+                Object = snf
+            });
+        }
+        public ActionResult UrunRaporuHighCart()
+        {
+            return View();
+        }
+        public JsonResult UrunRaporuDataGetir()
+        {
+            List<Sinif2> snf = new List<Sinif2>();
+            using(var c=new Context())
+            {
+                snf = c.Uruns.Select(x => new Sinif2
+                {
+                    urn = x.UrunAd,
+                    stk = x.Stok
+                }).OrderByDescending(x => x.stk).ToList();
+            }
+            return Json(new ResultStatusUI()
+            {
+                Object = snf
+            });
         }
     }
 }

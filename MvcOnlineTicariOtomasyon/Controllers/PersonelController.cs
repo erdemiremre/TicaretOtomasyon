@@ -39,7 +39,7 @@ namespace MvcOnlineTicariOtomasyon.Controllers
         [HttpPost]
         public ActionResult PersonelEkle(Personel p)
         {
-            if (Request.Files.Count>0)
+            if (Request.Files.Count > 0)
             {
                 string dosyaadi = Path.GetFileName(Request.Files[0].FileName);
                 string uzanti = Path.GetExtension(Request.Files[0].FileName);
@@ -103,16 +103,16 @@ namespace MvcOnlineTicariOtomasyon.Controllers
         [HttpPost]
         public JsonResult PersonelEklemeYapJson(Personel person)
         {
-            var hasPerson = c.Personels.Where(x => x.PersonelAd == person.PersonelAd && x.PersonelSoyad == person.PersonelSoyad).FirstOrDefault();
-            var department = c.Departmans.Where(x => x.Departmanid == person.Departmanid).FirstOrDefault();
+            var personelVarMi = c.Personels.Where(x => x.PersonelAd == person.PersonelAd && x.PersonelSoyad == person.PersonelSoyad).FirstOrDefault();
             
-            if (hasPerson!=null)
+
+            if (personelVarMi != null)
             {
                 return Json(new ResultStatusUI()
                 {
-                     FeedBack="Bu personelin kayıtı mevcut.",
-                     Object=null,
-                     Result=false,
+                    FeedBack = "Bu personelin kayıtı mevcut.",
+                    Object = null,
+                    Result = false,
                 });
             }
             if (Request.Files.Count > 0)
@@ -125,13 +125,21 @@ namespace MvcOnlineTicariOtomasyon.Controllers
             }
             c.Personels.Add(person);
             c.SaveChanges();
-            person.Departman = department;
-            return Json(new ResultStatusUI() 
-            { 
 
-                 FeedBack="Yeni Personel Eklendi",
-                 Object=person,
-                 Result=true,
+            var personelObjesi = new Models.DTO.PersonelDTO()
+            {
+                DepartmanAdi = c.Departmans.Where(x => x.Departmanid == person.Departmanid).Select(x => x.DepartmanAd).FirstOrDefault(),
+                Departmanid = person.Departmanid,
+                PersonelAd = person.PersonelAd,
+                PersonelGorsel = person.PersonelGorsel,
+                Personelid = person.Personelid,
+                PersonelSoyad = person.PersonelSoyad,
+            };
+            return Json(new ResultStatusUI()
+            {
+                FeedBack = "Yeni Personel Eklendi",
+                Object = personelObjesi,
+                Result = true,
             });
         }
     }

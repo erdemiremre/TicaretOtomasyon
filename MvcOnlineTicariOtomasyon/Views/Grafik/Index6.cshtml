@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "Index6";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+<br />
+<h2>Marka-Stok Grafiği</h2>
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <title>Result Visualization</title>
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $.ajax({
+
+                type: "POST",
+
+                dataType: "json",
+
+                contentType: "application/json",
+
+                url: '@Url.Action("VisualizeUrunResult3", "Grafik")',
+
+                success: function (result) {
+
+                    google.charts.load('current', {
+
+                        'packages': ['corechart']
+
+                    });
+
+                    google.charts.setOnLoadCallback(function () {
+
+                        drawChart(result);
+
+                    });
+
+                }
+
+            });
+
+        });
+
+
+
+        function drawChart(result) {
+
+            var data = new google.visualization.DataTable();
+
+            data.addColumn('string', 'Name');
+
+            data.addColumn('number', 'Stoklar');
+
+            var dataArray = [];
+
+
+
+            $.each(result, function (i, obj) {
+
+                dataArray.push([obj.Marka, obj.Stk]);
+
+            });
+
+            data.addRows(dataArray);
+
+
+
+            var columnChartOptions = {
+
+                //title: "Ürün-Stok Grafiği",
+
+                width: 1000,
+
+                height: 400,
+
+                bar: { groupWidth: "20%" },
+
+            };
+
+
+
+            var columnChart = new google.visualization.ColumnChart(document
+
+                .getElementById('Columnchart_div'));
+
+
+
+            columnChart.draw(data, columnChartOptions);
+
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <div id="Columnchart_div"></div>
+    <a href="/Grafik/Index5/" class="btn btn-danger">Pie Chart</a>
+    <a href="/Grafik/Index6/" class="btn btn-success">Column Chart</a>
+    <a href="/Grafik/Index7/" class="btn btn-warning">Line Chart</a>
+
+</body>
+</html>

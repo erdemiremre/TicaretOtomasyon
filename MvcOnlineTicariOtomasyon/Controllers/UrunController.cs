@@ -19,6 +19,7 @@ namespace MvcOnlineTicariOtomasyon.Controllers
             {
                 urunler = urunler.Where(y => y.UrunAd.Contains(p));
             }
+            var abc = urunler.Where(a => a.Durum == true).ToList();
             return View(urunler.Where(x => x.Durum==true).ToList());
         }
         [HttpGet]

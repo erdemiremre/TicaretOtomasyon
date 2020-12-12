@@ -5,9 +5,9 @@ using System.Web;
 
 namespace MvcOnlineTicariOtomasyon.Models.Siniflar
 {
-    public class Sinif1
+    public class Sinif2
     {
-        public string urunad { get; set; }
-        public short stok { get; set; }
+        public string urn { get; set; }
+        public short stk { get; set; }
     }
 }

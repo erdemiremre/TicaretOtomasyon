@@ -74,5 +74,58 @@ namespace MvcOnlineTicariOtomasyon.Controllers
                 Result = true,
             });
         }
+
+        [HttpPost]
+        public JsonResult KategoriGuncelleJson(Kategori kategori)
+        {
+            var name = c.Kategoris.Where(x => x.KategoriAd == kategori.KategoriAd).FirstOrDefault();
+            if (name!=null)
+            {
+                if (name.KategoriID != kategori.KategoriID)
+                {
+                    return Json(new ResultStatusUI()
+                    {
+                        FeedBack = "Böyle bir kategori mevcut.",
+                        Object=kategori,
+                        Result=false,
+                    });
+                }
+            }
+            var kt = c.Kategoris.Find(kategori.KategoriID);
+            kt.KategoriAd = kategori.KategoriAd;
+            c.SaveChanges();
+            return Json(new ResultStatusUI()
+            {
+                FeedBack = "Kategori güncellendi.",
+                Object = kategori,
+                Result = true,
+            });
+        }
+
+
+        [HttpPost]
+        public JsonResult KategoriSilJson(int id)
+        {
+            var UrunVarMi = c.Uruns.Where(x=>x.Kategoriid==id).ToList().Count();
+            //var ÜrünVarMı = kategori.Uruns.Count();
+            if (UrunVarMi != 0)
+            {
+                return Json(new ResultStatusUI()
+                {
+                    FeedBack = "Bu kategoriye ait ürünler mevcuttur.Silme işlemi yapılamaz.",
+                    Object = "",
+                    Result = false
+                });
+            }
+            var kt = c.Kategoris.Find(id);
+            c.Kategoris.Remove(kt);
+            c.SaveChanges();
+            return Json(new ResultStatusUI()
+            {
+                FeedBack = "Kategori silindi.",
+                Object = id,
+                Result = true,
+            });
+        }
     }
 }
