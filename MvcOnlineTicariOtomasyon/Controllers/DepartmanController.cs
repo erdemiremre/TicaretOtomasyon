@@ -114,5 +114,31 @@ namespace MvcOnlineTicariOtomasyon.Controllers
                 Result = true,
             });
         }
+
+        [HttpPost]
+        public JsonResult DepartmanSilJson(int id)
+        {
+            var PersonelVarMi = c.Personels.Where(x => x.Personelid == id).ToList().Count();
+            if (PersonelVarMi!=0)
+            {
+                return Json(new ResultStatusUI()
+                {
+                    FeedBack = "Bu departmana ait personel bulunmaktadır.Silme işlemi yapılamaz..",
+                    Object="",
+                    Result=false
+                    
+                });
+            }
+            var dpt = c.Departmans.Find(id);
+            dpt.Durum = false;
+            c.SaveChanges();
+            return Json(new ResultStatusUI()
+            {
+                FeedBack = "Silme işlemi gerçekleşti",
+                Object = id,
+                Result = true
+
+            });
+        }
     } 
 }

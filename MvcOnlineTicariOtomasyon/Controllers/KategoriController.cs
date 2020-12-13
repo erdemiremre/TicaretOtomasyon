@@ -14,11 +14,21 @@ namespace MvcOnlineTicariOtomasyon.Controllers
     {
         // GET: Kategori
         Context c = new Context();
-        public ActionResult Index(int sayfa = 1)
+        public ActionResult Index()
         {
-            var degerler = c.Kategoris.ToList().ToPagedList(sayfa, 4);
-            return View(degerler);
+            return View();
         }
+        [HttpPost]
+        public JsonResult KategoriListele()
+        {
+            var degerler = c.Kategoris.ToList();
+            return Json(new ResultStatusUI()
+            {
+                Result=true,
+                Object=degerler,
+            });
+        }
+
         [HttpGet]
         public ActionResult KategoriEkle()
         {

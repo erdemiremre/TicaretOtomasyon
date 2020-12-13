@@ -60,7 +60,7 @@
                     <label for="PersonelGorsel">PersonelGorsel</label>
 
                     <br>
-                    <input type="file" name="PersonelGorsel">
+                    <input type="file" id="PersonelGorsel" name="PersonelGorsel">
                     <br>
                     <br>
                     <label for="Departman">Departman</label>
@@ -76,7 +76,7 @@
 </div>
 
 <a href="/Personel/PersonelEkle" class="btn btn-info">Yeni Personel Ekle</a>
-<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#NewPerson">Yeni Personel</button>
+<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#NewPerson"><i data-toggle="tooltip" data-placement='top' title="Yeni Personel Ekle" class="fas fa-user-plus"></i></button>
 
 <script type="text/javascript">
     $('#NewPerson').on('shown.bs.modal', function (e) {
@@ -97,17 +97,20 @@
     $(document)
         .on('click', '[data-role="save"]', function () {
             //data-role=save kısmı istediğin şekilde yazarak çekebilirsin.
-            
-            var personName = $('#PersonelAd').val();
-            var personSurname = $('#PersonelSoyad').val();
-            var personFoto = $;
-            var personDepartman = $('#Departmanid').val();
+            var formData = new FormData();
+            var fileInput = document.getElementById('PersonelGorsel');
+            formData.append("PersonelGorsel", fileInput.files[0]);
+            formData.append("PersonelAd", $('#PersonelAd').val());
+            formData.append("PersonelSoyad", $('#PersonelSoyad').val());
+            formData.append("Departmanid", $('#Departmanid').val());
             debugger;
             $.ajax({
                 url: "/Personel/PersonelEklemeYapJson",
                 type: 'POST',
                 dataType: 'json',
-                data: { PersonelAd: personName, PersonelSoyad: personSurname, PersonelGorsel: personFoto, Departmanid: personDepartman},
+                contentType: false,
+                processData: false,
+                data: formData,
                 success: function (data) {
                     if (data.Result == false) {
                         alertify.error(data.FeedBack)
@@ -116,7 +119,7 @@
                         var newRowContent = '<tr><td>' + data.Object.Personelid + '</td>';
                         newRowContent += '<td > ' + data.Object.PersonelAd +  '</td >';
                         newRowContent += '<td> '  + data.Object.PersonelSoyad + '</td >';
-                        newRowContent += '<td> ' + data.Object.PersonelGorsel + '</td >';
+                        newRowContent += '<td> <img src="' + data.Object.PersonelGorsel + '" style="width:50px;height:50px;"></td>';
                         newRowContent += '<td> ' + data.Object.DepartmanAdi + '</td >';
                         newRowContent += '<td><a href="/Personel/PersonelGetir/' + data.Object.Personelid + '" class=" btn btn-success">Güncelle</a></td>';
                         newRowContent += '<td><a href="/Departman/DepartmanPersonelSatis/' + data.Object.Personelid + '" class=" btn btn-dark">Detaylar</a></td></tr>';
@@ -125,9 +128,15 @@
                     }
                     $('[data-dismiss="modal"]').click();
                     $('#PersonelAd').val("");
+                    $('#PersonelSoyad').val("");
+                    $('#PersonelGorsel').val("");
                 }
             })
         })
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 
 
 </script>
