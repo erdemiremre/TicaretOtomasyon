@@ -7,6 +7,19 @@
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
+<link href="~/Content/MyScripts/KategoriJs/css/AramaFiltreleme.css" rel="stylesheet" />
+
+<div style="margin-top:15px;">
+    <div class="container h-100">
+        <div class="d-flex justify-content-center h-100">
+            <div class="searchbar">
+                <input class="search_input" type="text" name="" id="searchInput" placeholder="Lütfen aradığınız kategoriyi yazın...">
+                <a href="#" class="search_icon"><i class="fas fa-search"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <table class="table table-bordered" id="tableIndex" style="margin-top:20px">
     <thead>
         <tr>
@@ -44,9 +57,9 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="KategoriAd">Kategori Adı</label>
-                    <input class="form-control" data-val="true" data-val-length="KategoriAd alanı uzunluğu en fazla 30 olan bir dize olmalıdır." data-val-length-max="30" id="KategoriAd" name="KategoriAd" type="text" value="">
+                    <input class="form-control" data-val="true"   data-val-length="KategoriAd alanı uzunluğu en fazla 30 olan bir dize olmalıdır." data-val-length-max="30" id="KategoriAd" name="KategoriAd" type="text" value="">
                 </div>
-                <button type="button" class="btn btn-primary" onclick="AddProduct()">Ekle</button>
+                <button type="button" class="btn btn-primary" disabled="disabled" id="addProductButton" onclick="AddProduct()">Ekle</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button>
             </div>
         </div>
@@ -60,10 +73,10 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="KategoriAd">Kategori Adı</label>
+                    <label for="KategoriAdUpdate">Kategori Adı</label>
                     <input class="form-control" data-val="true" data-val-length="KategoriAd alanı uzunluğu en fazla 30 olan bir dize olmalıdır." data-val-length-max="30" id="KategoriAdUpdate" name="KategoriAdUpdate" type="text" value="">
                 </div>
-                <button type="button" class="btn btn-success" id="updateButton" data-update="0">Güncelle</button>
+                <button type="button" class="btn btn-success" disabled="disabled" id="updateButton" data-update="0">Güncelle</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button>
             </div>
         </div>
@@ -85,134 +98,158 @@
 </div>
 
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewProduct"><i data-toggle="tooltip" data-placement='top' title="Yeni Ürün Ekle" class="fas fa-cart-plus"></i></button>
-
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewProduct"><i data-toggle="tooltip" data-placement='top' title="Yeni Kategori Ekle" class="fas fa-plus"></i></button>
 @*@Html.PagedListPager((IPagedList)Model, sayfa => Url.Action("Index", new { sayfa }))*@
 @*<a href="/Kategori/KategoriEkle" class="btn btn-primary">Kategori Ekle</a>*@
 
-@*<script src="~/Content/MyScripts/KategoriJs/js/KategoriIndex.js"></script>*@
 <script type="text/javascript">
-    $(document).ready(function () {
-        Listele();
-    })
-   
-
-    function Listele() {
-        $.ajax({
-            url: "/Kategori/KategoriListele",
-            type: "POST",
-            async: false,
-            dataType: "json",
-            beforeSend: function () {
-                $('body').loadingModal({ text: "Kategoriler listeleniyor..", animation: 'cubeGrid', backgroundColor: 'black' });
-            },
-            success: function (data) {
-                var icerik = "";
-                $.each(data.Object, function (i, item) {
-                    icerik += "<tr>";
-                    icerik += "<td>" + item.KategoriID + "</td>";
-                    icerik += "<td>" + item.KategoriAd + "</td>";
-                    icerik += "<td><a style='font-size: 22px; margin-left: 10px; color: #039b39;'  class='modalAc'    data-adi='" + item.KategoriAd + "' data-id='" + item.KategoriID + "' data-toggle='modal' data-target='#UpdateProduct'><i data-toggle='tooltip' data-placement='top' title='Düzenle' class='fa fa-edit'></i></a>";
-                    icerik += "<a  style='font-size: 22px; margin-left: 10px; color: #b5210d;' class='modalSilAc'   data-adi='" + item.KategoriAd + "' data-id='" + item.KategoriID + "' data-toggle='modal' data-target='#DeleteProduct'><i data-toggle='tooltip' data-placement='top' title='Sil' class='fa fa-trash'></i></a></td>";
-                    icerik += "</tr>";
-                })
-                $("#tbodyList").html(icerik);
-                $('body').loadingModal('destroy');
-            }
-        });
-    }
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
-    
-
-    $('#updateButton').on('click', function () {
-        var kategoriID = $(this).attr('data-update');
-        var kategoriAdi = $('#KategoriAdUpdate').val();
-        $.ajax({
-            url: "/Kategori/KategoriGuncelleJson",
-            type: "POST",
-            dataType: "json",
-            data: { KategoriAd: kategoriAdi, KategoriID: kategoriID },
-            success: function (data) {
-                debugger;
-                if (data.Result == false) {
-                    alertify.error(data.FeedBack);
-                }
-                else {
-                    Listele();
-                    alertify.success(data.FeedBack);
-                    $('#KategoriAdUpdate').val("");
-                }
-                $('[data-dismiss="modal"]').click();
-                $('body').loadingModal('destroy');
-            }
+        $(document).ready(function () {
+            Listele();
         })
-    });
-
-    $(document)
-        .on('click', '.modalAc', function () {
-            var kategoriAdi = $(this).attr('data-adi');
-            var kategoriID = $(this).attr('data-id');
-            $('#KategoriAdUpdate').val(kategoriAdi);
-            $('#updateButton').attr('data-update', kategoriID);
-        })
-        .on('click', '.modalSilAc', function () {
-            var kategoriAdi = $(this).data("adi");
-            $(".modal-body>p").html(kategoriAdi + " kategorisini silmek istiyor musun?");
-            var kategoriid = $(this).data("id");
-            $(".kategoriSil").data("id", kategoriid);
+        $("#searchInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tableIndex tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
         });
 
-    $(".kategoriSil").click(function () {
-        var kategoriid = $(this).data("id");
-        $.ajax({
-            url: "/Kategori/KategoriSilJson?id=" + kategoriid,
-            type: "POST",
-            dataType: "json",
-            success: function (data) {
-                if (data.Result == false) {
-                    alertify.error(data.FeedBack);
-                }
-                else {
-                    Listele();
-                    alertify.success(data.FeedBack);
-                }
-                $('[data-dismiss="modal"]').click();
-            }
 
-        });
-    });
-
-    function AddProduct() {
-        var categoryName = $('#KategoriAd').val();
-        if (categoryName == "") {
-            alertify.danger("Kategori adı girilmedi.");
-        }
-        else {
+        function Listele() {
             $.ajax({
-                url: "/Kategori/KategoriEkleJson",
+                url: "/Kategori/KategoriListele",
+                type: "POST",
+                async: false,
+                dataType: "json",
+                beforeSend: function () {
+                    $('body').loadingModal({ text: "Kategoriler listeleniyor..", animation: 'cubeGrid', backgroundColor: 'black' });
+                },
+                success: function (data) {
+                    var icerik = "";
+                    $.each(data.Object, function (i, item) {
+                        icerik += "<tr>";
+                        icerik += "<td>" + item.KategoriID + "</td>";
+                        icerik += "<td>" + item.KategoriAd + "</td>";
+                        icerik += "<td><a style='font-size: 22px; margin-left: 10px; color: #039b39;'  class='modalAc'    data-adi='" + item.KategoriAd + "' data-id='" + item.KategoriID + "' data-toggle='modal' data-target='#UpdateProduct'><i data-toggle='tooltip' data-placement='top' title='Düzenle' class='fa fa-edit'></i></a>";
+                        icerik += "<a  style='font-size: 22px; margin-left: 10px; color: #b5210d;' class='modalSilAc'   data-adi='" + item.KategoriAd + "' data-id='" + item.KategoriID + "' data-toggle='modal' data-target='#DeleteProduct'><i data-toggle='tooltip' data-placement='top' title='Sil' class='fa fa-trash'></i></a></td>";
+                        icerik += "</tr>";
+                    })
+                    $("#tbodyList").html(icerik);
+                    $('body').loadingModal('destroy');
+                }
+            });
+        }
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+
+        $('#updateButton').on('click', function () {
+            var kategoriID = $(this).attr('data-update');
+            var kategoriAdi = $('#KategoriAdUpdate').val();
+            $.ajax({
+                url: "/Kategori/KategoriGuncelleJson",
                 type: "POST",
                 dataType: "json",
-                data: { KategoriAd: categoryName },
+                data: { KategoriAd: kategoriAdi, KategoriID: kategoriID },
                 beforeSend: function () {
-                    $('body').loadingModal({ text: "Kategori ekleniyor..", animation: 'cubeGrid', backgroundColor: 'black' });
+                    $('body').loadingModal({ text: "Kategoriler Güncelleniyor..", animation: 'cubeGrid', backgroundColor: 'black' });
                 },
+                success: function (data) {
+                    debugger;
+                    if (data.Result == false) {
+                        alertify.error(data.FeedBack);
+                    }
+                    else {
+                        Listele();
+                        alertify.success(data.FeedBack);
+                        $('#KategoriAdUpdate').val("");
+                    }
+                    $('[data-dismiss="modal"]').click();
+                    $('body').loadingModal('destroy');
+                }
+            })
+        });
+
+        $(document)
+            .on('click', '.modalAc', function () {
+                var kategoriAdi = $(this).attr('data-adi');
+                var kategoriID = $(this).attr('data-id');
+                $('#KategoriAdUpdate').val(kategoriAdi);
+                $('#updateButton').attr('data-update', kategoriID);
+            })
+            .on('click', '.modalSilAc', function () {
+                var kategoriAdi = $(this).data("adi");
+                $(".modal-body>p").html(kategoriAdi + " kategorisini silmek istiyor musun?");
+                var kategoriid = $(this).data("id");
+                $(".kategoriSil").data("id", kategoriid);
+           
+            })
+            .on('keyup', '#KategoriAd', function (e) {
+                var kategoriAdi = $('#KategoriAd').val();
+                var addProductButton = $('#addProductButton');
+                kategoriAdi == "" ? addProductButton.attr('disabled', 'disabled') : addProductButton.removeAttr('disabled', 'disabled');
+
+            })
+            .on('keyup', '#KategoriAdUpdate', function (e) {
+                var kategoriAdi = $('#KategoriAdUpdate').val();
+                var addProductButton = $('#updateButton');
+                kategoriAdi == "" ? addProductButton.attr('disabled', 'disabled') : addProductButton.removeAttr('disabled', 'disabled');
+
+            })
+            ;
+
+
+
+
+        $(".kategoriSil").click(function () {
+            var kategoriid = $(this).data("id");
+            $.ajax({
+                url: "/Kategori/KategoriSilJson?id=" + kategoriid,
+                type: "POST",
+                dataType: "json",
                 success: function (data) {
                     if (data.Result == false) {
                         alertify.error(data.FeedBack);
                     }
                     else {
                         Listele();
-                        $('[data-dismiss="modal"]').click();
                         alertify.success(data.FeedBack);
-                        $('#KategoriAd').val("");
                     }
-                    $('body').loadingModal('destroy');
-
+                    $('[data-dismiss="modal"]').click();
                 }
+
             });
+        });
+
+        function AddProduct() {
+            var categoryName = $('#KategoriAd').val();
+            if (categoryName == "") {
+                alertify.danger("Kategori adı girilmedi.");
+            }
+            else {
+                $.ajax({
+                    url: "/Kategori/KategoriEkleJson",
+                    type: "POST",
+                    dataType: "json",
+                    data: { KategoriAd: categoryName },
+                    beforeSend: function () {
+                        $('body').loadingModal({ text: "Kategori ekleniyor..", animation: 'cubeGrid', backgroundColor: 'black' });
+                    },
+                    success: function (data) {
+                        if (data.Result == false) {
+                            alertify.error(data.FeedBack);
+                        }
+                        else {
+                            Listele();
+                            $('[data-dismiss="modal"]').click();
+                            alertify.success(data.FeedBack);
+                            $('#KategoriAd').val("");
+                        }
+                        $('body').loadingModal('destroy');
+
+                    }
+                });
+            }
         }
-    }
-    
-</script>
+
+    </script>

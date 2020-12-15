@@ -97,8 +97,17 @@ namespace MvcOnlineTicariOtomasyon.Controllers
                                                Value = x.Departmanid.ToString()
                                            }).ToList();
             return Json(deger1);
-
-
+        }
+        [HttpPost]
+        public JsonResult PersonelDerpartmanDoldurJson(int id)
+        {
+            List<SelectListItem> deger1 = (from x in c.Departmans.ToList()
+                                           select new SelectListItem
+                                           {
+                                               Text = x.DepartmanAd,
+                                               Value = x.Departmanid.ToString()
+                                           }).ToList();
+          return Json(deger1);
         }
         [HttpPost]
         public JsonResult PersonelEklemeYapJson(Personel person)

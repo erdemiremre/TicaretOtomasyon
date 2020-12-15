@@ -166,7 +166,10 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DTO\DepartmanDTO.cs" />
+    <Compile Include="Models\DTO\GrafikRaporModel.cs" />
     <Compile Include="Models\DTO\PersonelDTO.cs" />
+    <Compile Include="Models\DTO\UrunDto.cs" />
+    <Compile Include="Models\Enums\Enums.cs" />
     <Compile Include="Models\Helper\ResultStatusUI.cs" />
     <Compile Include="Models\Siniflar\Admin.cs" />
     <Compile Include="Models\Siniflar\Cariler.cs" />
@@ -2211,6 +2214,7 @@
     <Content Include="Content\DataTables\swf\flashExport.swf" />
     <Content Include="Content\Loading\css\jquery.loadingModal.min.css" />
     <Content Include="Content\Loading\js\jquery.loadingModal.min.js" />
+    <Content Include="Content\MyScripts\KategoriJs\css\AramaFiltreleme.css" />
     <Content Include="Content\MyScripts\KategoriJs\js\KategoriIndex.js" />
     <Content Include="Content\MyScripts\KategoriJs\js\KategoriIndexNew.js" />
     <Content Include="Content\PagedList.css" />
@@ -2980,10 +2984,10 @@
     <Content Include="Views\Grafik\UrunRaporuHighCart.cshtml" />
     <Content Include="Views\CariPanel\GelenMesajlar.cshtml" />
     <Content Include="Views\CariPanel\GidenMesajlar.cshtml" />
+    <Content Include="Views\CariPanel\MesajDetay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\MyScripts\KategoriJs\css\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

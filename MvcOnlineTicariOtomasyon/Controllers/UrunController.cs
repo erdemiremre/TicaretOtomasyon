@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MvcOnlineTicariOtomasyon.Models.Enums;
 using MvcOnlineTicariOtomasyon.Models.Siniflar;
 
 
@@ -32,6 +33,7 @@ namespace MvcOnlineTicariOtomasyon.Controllers
                                                Value = x.KategoriID.ToString()
                                            }).ToList();
             ViewBag.dgr1 = deger1;
+            
             return View();
         }
         [HttpPost]

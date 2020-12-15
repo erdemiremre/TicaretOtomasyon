@@ -4,8 +4,8 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
-<br />
-<form autocomplete="off">
+<link href="~/Content/MyScripts/KategoriJs/css/AramaFiltreleme.css" rel="stylesheet" />
+@*<form autocomplete="off">
     @using (Html.BeginForm("Index", "Personel", FormMethod.Get))
     {
         <p>
@@ -13,7 +13,17 @@
             <input type="submit" value="Ara" />
         </p>
     }
-</form>
+</form>*@
+<div style="margin-top:15px;">
+    <div class="container h-100">
+        <div class="d-flex justify-content-center h-100">
+            <div class="searchbar">
+                <input class="search_input" type="text" name="" id="searchInput" placeholder="Lütfen aradığınız personeli yazın...">
+                <a href="#" class="search_icon"><i class="fas fa-search"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
 <br />
 <table class="table table-striped" id="tableIndex">
     <tr>
@@ -37,12 +47,15 @@
             </td>
             <td>@x.Departman.DepartmanAd</td>
             @*<td><a href="/Cari/CariSil/@x.Personelid" class=" btn btn-danger">Sil</a></td>*@
-            <td><a href="/Personel/PersonelGetir/@x.Personelid" class=" btn btn-success">Güncelle</a></td>
+            <td>
+                <a href="/Personel/PersonelGetir/@x.Personelid" class=" btn btn-success">Güncelle</a>
+                <a style='font-size: 22px; margin-left: 10px; color: #039b39; cursor:pointer;'data-adi="@x.PersonelAd" data-soyadi="@x.PersonelSoyad" data-departman="@x.Departman.DepartmanAd" data-id="@x.Personelid" class='modalAc' data-toggle='modal' data-target='#UpdatePerson'><i data-toggle='tooltip' data-placement='top' title='Düzenle' class='fa fa-edit'></i></a>
+            
+            </td>
             <td><a href="/Departman/DepartmanPersonelSatis/@x.Personelid" class=" btn btn-dark">Detaylar</a></td>
         </tr>
     }
 </table>
-
 <div class="modal" id="NewPerson">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -74,11 +87,49 @@
         </div>
     </div>
 </div>
+<div class="modal" id="UpdatePerson">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Personel Güncelleme</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="PersonelAd">PersonelAd</label>
+                    <input class="form-control" data-val="true" data-val-length="PersonelAd alanı uzunluğu en fazla 30 olan bir dize olmalıdır." data-val-length-max="30" id="UpdatePersonelAd" name="UpdatePersonelAd" type="text" value="">
+                    <br>
+                    <label for="PersonelSoyad">PersonelSoyad</label>
+                    <input class="form-control" data-val="true" data-val-length="PersonelSoyad alanı uzunluğu en fazla 30 olan bir dize olmalıdır." data-val-length-max="30" id="UpdatePersonelSoyad" name="UpdatePersonelSoyad" type="text" value="">
+                    <br>
+                    <label for="PersonelGorsel">PersonelGorsel</label>
+
+                    <br>
+                    <input type="file" id="PersonelGorsel" name="PersonelGorsel">
+                    <br>
+                    <br>
+                    <label for="Departman">Departman</label>
+                    <select class="form-control" data-val="true" data-val-number="The field Departmanid must be a number." data-val-required="Departmanid alanı gereklidir." id="UpdateDepartmanid" name="UpdateDepartmanid">
+                    </select>
+                    <br>
+                </div>
+                <button class="btn btn-info" data-update="" data-role="update">Kaydet</button>
+                <button class="btn btn-danger" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <a href="/Personel/PersonelEkle" class="btn btn-info">Yeni Personel Ekle</a>
 <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#NewPerson"><i data-toggle="tooltip" data-placement='top' title="Yeni Personel Ekle" class="fas fa-user-plus"></i></button>
 
 <script type="text/javascript">
+    $("#searchInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#tableIndex tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
     $('#NewPerson').on('shown.bs.modal', function (e) {
         $.ajax({
             url: "/Personel/PersonelEkleJson",
@@ -94,6 +145,7 @@
             }
         });
     })
+
     $(document)
         .on('click', '[data-role="save"]', function () {
             //data-role=save kısmı istediğin şekilde yazarak çekebilirsin.
@@ -133,6 +185,37 @@
                 }
             })
         })
+
+    $('#UpdatePerson').on('shown.bs.modal', function (e) {
+        var departmanadi = $(this).attr('data-update');
+        debugger;
+        $.ajax({
+            url: "/Personel/PersonelEkleJson",
+            type: 'POST',
+            dataType: 'json', // added data type
+            success: function (res) {
+                $('#UpdateDepartmanid').html('');              
+                debugger;
+                var dropdownDepartman = '<option value="0">' + departmanadi + '</option>'
+                $.each(res, function (i, item) {
+                    dropdownDepartman += '<option value="' + item.Value + '">' + item.Text + '</option>';
+                })
+                $('#UpdateDepartmanid').append(dropdownDepartman);
+            }
+        });
+    })
+    $('.modalAc').on('click', function (e) {
+        var personelAdi = $(this).attr('data-adi');
+        var personelSoyadi = $(this).attr('data-soyadi');
+        var personelId = $(this).attr('data-id');
+        var departman = $(this).attr('data-departman');
+        debugger;
+        $('#UpdatePersonelAd').val(personelAdi);
+        $('#UpdatePersonelSoyad').val(personelSoyadi);
+        $('#UpdateDepartmanid').val(departman);
+        $('#UpdatePerson').attr('data-update', departman);
+        debugger;
+    })
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()

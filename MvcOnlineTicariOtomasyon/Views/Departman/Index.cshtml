@@ -27,9 +27,13 @@
     @*<td><a href="/Departman/DepartmanGetir/@k.Departmanid" class="btn btn-success">Güncelle</a></td>*@
 <td>
     @*<button type="button" class="btn btn-danger modalSilAc" data-adi="@k.DepartmanAd" data-id="@k.Departmanid" data-toggle="modal" data-target="#DeleteDepartman"><i data-toggle="tooltip" data-placement="top" title="Departmanı Sil" class="fas fa-trash-alt"></i></button>*@
-    <a style="font-size: 22px; margin-left: 10px; color: #b5210d;" class="modalSilAc" data-adi="@k.DepartmanAd" data-id="@k.Departmanid" data-toggle="modal" data-target="#DeleteDepartman"><i data-toggle="tooltip" data-placement="top" title="Departmanı Sil" class="fas fa-trash-alt"></i></a>
+    <a style="font-size: 22px; margin-left: 10px; color: #b5210d; cursor:pointer;"  class="modalSilAc" data-adi="@k.DepartmanAd" data-id="@k.Departmanid" data-toggle="modal" data-target="#DeleteDepartman"><i data-toggle="tooltip" data-placement="top" title="Departmanı Sil" class="fas fa-trash-alt"></i></a>
     @*<button type="button" class="btn btn-success modalAc" data-adi="@k.DepartmanAd" data-id="@k.Departmanid" data-toggle="modal" data-target="#UpdateDepartman"><i data-toggle="tooltip" data-placement="top" title="Güncelle" class="fas fa-edit"></i></button>*@
-    <a style="font-size: 22px; margin-left: 10px; color: #039b39;" class="modalAc" data-adi="@k.DepartmanAd" data-id="@k.Departmanid" data-toggle="modal" data-target="#UpdateDepartman"><i data-toggle="tooltip" data-placement="top" title="Güncelle" class="fas fa-edit"></i></a>
+    <a style="        font-size: 22px;
+        margin-left: 10px;
+        color: #039b39;
+        cursor: pointer;
+        cursor: pointer;" class="modalAc" data-adi="@k.DepartmanAd" data-id="@k.Departmanid" data-toggle="modal" data-target="#UpdateDepartman"><i data-toggle="tooltip" data-placement="top" title="Güncelle" class="fas fa-edit"></i></a>
 </td>
     <td><a href="/Departman/DepartmanDetay/@k.Departmanid" class="btn btn-dark">Detay</a></td>
 </tr>

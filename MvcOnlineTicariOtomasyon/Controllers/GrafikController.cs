@@ -148,18 +148,38 @@ namespace MvcOnlineTicariOtomasyon.Controllers
         }
         public JsonResult UrunRaporuDataGetir()
         {
-            List<Sinif2> snf = new List<Sinif2>();
-            using(var c=new Context())
+            var grafikRaporModel = new GrafikRaporModel();
+            using (var c=new Context())
             {
-                snf = c.Uruns.Select(x => new Sinif2
+                var urun = c.Uruns.Select(x => new UrunDto
                 {
-                    urn = x.UrunAd,
-                    stk = x.Stok
-                }).OrderByDescending(x => x.stk).ToList();
+                    UrunIsmi = x.UrunAd,
+                    Stok = x.Stok
+                }).OrderByDescending(x => x.Stok).ToList();
+                grafikRaporModel.UrunDTOs.AddRange(urun);
+
+                var departmanlar = c.Departmans.ToList();
+                var personeller = c.Personels.ToList();
+                var listDepartman = new List<DepartmanDTO>();
+
+                foreach (var item in departmanlar)
+                {
+                    if (item.Personels != null)
+                    {
+                        if (item.Personels.Count() != 0)
+                        {
+                            var departman = new DepartmanDTO();
+                            departman.Marka = item.DepartmanAd;
+                            departman.Stk = (short)item.Personels.Count();
+                            listDepartman.Add(departman);
+                        }
+                    }
+                }
+                grafikRaporModel.DepartmanDTOs.AddRange(listDepartman);
             }
             return Json(new ResultStatusUI()
             {
-                Object = snf
+                Object = grafikRaporModel
             });
         }
     }
