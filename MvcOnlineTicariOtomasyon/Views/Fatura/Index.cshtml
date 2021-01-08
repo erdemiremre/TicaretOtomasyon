@@ -58,32 +58,32 @@
 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Modal1">Popup Penceresi</button>
 
 <div class="modal" id="Modal1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Popup Dialog Ekranı</h2>
-            </div>
-            <div class="modal-body">
-                <table class="table table-hover">
-                    <tr>
-                        <td>Seri No</td>
-                        <td>Sıra No</td>
-                        <td>Tutar</td>
-                    </tr>
-                    @foreach (var x in Model)
-                    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Popup Dialog Ekranı</h2>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover">
                         <tr>
-                            <td>@x.FaturaSeriNo</td>
-                            <td>@x.FaturaSıraNo</td>
-                            <td>@x.Toplam</td>
+                            <td>Seri No</td>
+                            <td>Sıra No</td>
+                            <td>Tutar</td>
                         </tr>
-                    }
-                </table>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Tamam</button>
+                        @foreach (var x in Model)
+                        {
+                            <tr>
+                                <td>@x.FaturaSeriNo</td>
+                                <td>@x.FaturaSıraNo</td>
+                                <td>@x.Toplam</td>
+                            </tr>
+                        }
+                    </table>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Tamam</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <div class="modal" id="Modal2">
     <div class="modal-dialog">
@@ -101,7 +101,7 @@
                         <td>Tutar</td>
                     </tr>
                     @foreach (var x in Model)
-                    {                       
+                    {
                         <tr>
                             <td>@x.FaturaSeriNo</td>
                             <td>@x.FaturaSıraNo</td>
@@ -116,4 +116,5 @@
         </div>
     </div>
 </div>
+
 

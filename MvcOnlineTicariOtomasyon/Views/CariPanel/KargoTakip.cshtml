@@ -1,0 +1,49 @@
+﻿@using MvcOnlineTicariOtomasyon.Models.Siniflar
+@model List<KargoDetay>
+@{
+    ViewBag.Title = "KargoTakip";
+    Layout = "~/Views/Shared/_CariLayout.cshtml";
+}
+<br />
+<form autocomplete="off">
+    @using (Html.BeginForm("KargoTakip", "CariPanel", FormMethod.Get))
+    {
+        <p>
+            Kargo Takip Numarası: @Html.TextBox("p")
+            <input type="submit" value="Ara" />
+        </p>
+    }
+</form>
+<br />
+<table class="table table-bordered">
+    <tr>
+        <th>Takip Kodu</th>
+        <th>Personel</th>
+        <th>Alıcı</th>
+        <th>Tarih</th>
+        <th>İşlemler</th>
+    </tr>
+    @foreach (var kargodetay in Model)
+    {
+        <tr>
+            <td>@kargodetay.TakipKodu</td>
+            <td>@kargodetay.Personel</td>
+            <td>@kargodetay.Alici</td>
+            <td>@kargodetay.Tarih</td>
+            <td>
+                <a style="font-size:22px; margin-left:16px; margin-top:5px;" href="/CariPanel/KargoTakipDetay/@kargodetay.TakipKodu" data-toggle="tooltip" data-placement="top" title="Detaylar"><i class="fas fa-info-circle"></i></a>
+                <a style="font-size:22px; margin-left:16px; margin-top:5px;" href="/QR/Index/@kargodetay.TakipKodu" data-toggle="tooltip" data-placement="top" title="QR Kod Oluştur"><i class="fas fa-qrcode"></i></a>
+            </td>
+        </tr>
+    }
+</table>
+
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+
+</script>
+
